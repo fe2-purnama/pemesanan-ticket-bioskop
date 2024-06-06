@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  user_id    Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String
+  phone      String?
+  Tickets    Tickets[]
+}
+
+model Cinemas {
+  cinema_id Int     @id @default(autoincrement())
+  name      String
+  address   String
+  city      String
+  state     String
+  zip_code  String
+  Shows     Shows[]
+}
+
+model Movies {
+  movie_id    Int     @id @default(autoincrement())
+  title       String
+  image       String
+  url         String
+  genre       String
+  duration    Int
+  rating      String
+  description String?
+  Shows       Shows[]
+}
+
+model Shows {
+  show_id         Int      @id @default(autoincrement())
+  cinema_id       Int
+  movie_id        Int
+  show_time       DateTime
+  available_seats Int
+  Cinema          Cinemas  @relation(fields: [cinema_id], references: [cinema_id])
+  Movie           Movies   @relation(fields: [movie_id], references: [movie_id])
+  Tickets         Tickets[]
+}
+
+model Tickets {
+  ticket_id    Int      @id @default(autoincrement())
+  user_id      Int
+  show_id      Int
+  seat_number  String
+  booking_time DateTime
+  User         Users    @relation(fields: [user_id], references: [user_id])
+  Show         Shows    @relation(fields: [show_id], references: [show_id])
+  Payments     Payments[]
+}
+
+model Payments {
+  payment_id    Int      @id @default(autoincrement())
+  ticket_id     Int
+  amount        Float
+  payment_time  DateTime
+  payment_method String
+  Ticket        Tickets  @relation(fields: [ticket_id], references: [ticket_id])
+}
