@@ -26,10 +26,12 @@ app.get("/", (req, res) => {
     res.send("Hello World dulu");
 });
 
-const moviesController = require("./movie/movie.controller");
-app.use("/movies", moviesController);
+// const moviesController = require("./movie/movie.controller");
+const ticketRouter = require('./ticket/ticket.controller');
 
-app.use('/movies', movieRouter);
+// app.use("/movies", moviesController);
+// app.use('/movies', movieRouter);
+app.use("/ticket", ticketRouter);
 
 app.listen(PORT, () => {
     console.log("Express API running in port: "+ PORT);
