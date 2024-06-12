@@ -28,7 +28,6 @@ model Cinemas {
   address   String
   city      String
   state     String
-  zip_code  String
   Shows     Shows[]
 }
 

@@ -2,7 +2,6 @@ const express = require("express");
 const dotenv = require("dotenv");
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
-const movieRouter = require('./movie/movie.controller');
 const cors = require("cors");
 const path = require("path");
 
@@ -23,14 +22,21 @@ app.use(fileUpload());
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-    res.send("Hello World dulu");
+    res.send("Hello World dulu gasih? engga ya");
 });
 
-// const moviesController = require("./movie/movie.controller");
+const moviesController = require("./movie/movie.controller");
+const registerController = require("./user/register/register.controller");
+const loginController = require("./user/auth/auth.controller");
+const cinemaRouter = require("./cinema/cinema.controller");
+const showRouter = require('./show/show.controller');
 const ticketRouter = require('./ticket/ticket.controller');
 
-// app.use("/movies", moviesController);
-// app.use('/movies', movieRouter);
+app.use("/movies", moviesController);
+app.use("/register", registerController);
+app.use("/login", loginController);
+app.use("/cinemas", cinemaRouter);
+app.use("/shows", showRouter);
 app.use("/ticket", ticketRouter);
 
 app.listen(PORT, () => {
