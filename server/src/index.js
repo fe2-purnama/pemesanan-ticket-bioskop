@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const cors = require("cors");
 const path = require("path");
+const { verifyToken, ensureAdmin } = require('./user/auth/auth.service');
 
 const app = express();
 
@@ -24,6 +25,9 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
     res.send("Hello World dulu gasih? engga ya");
 });
+app.use('/admin', verifyToken, ensureAdmin, (req, res) => {
+    res.json({ message: 'Welcome to the admin dashboard' });
+});
 
 const moviesController = require("./movie/movie.controller");
 const registerController = require("./user/register/register.controller");
@@ -34,10 +38,11 @@ const ticketRouter = require('./ticket/ticket.controller');
 
 app.use("/movies", moviesController);
 app.use("/register", registerController);
-app.use("/login", loginController);
+app.use("/auth", loginController);
 app.use("/cinemas", cinemaRouter);
 app.use("/shows", showRouter);
 app.use("/ticket", ticketRouter);
+
 
 app.listen(PORT, () => {
     console.log("Express API running in port: "+ PORT);

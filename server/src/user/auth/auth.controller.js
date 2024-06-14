@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { authenticateUser } = require('./auth.service');
+const { authenticateUser, verifyToken, ensureAdmin } = require('./auth.service');
 
-router.post("/", async (req, res) => {
+router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -11,6 +11,10 @@ router.post("/", async (req, res) => {
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
+});
+
+router.get("/verify-admin", verifyToken, ensureAdmin, (req, res) => {
+    res.status(200).json({ message: 'Authorized' });
 });
 
 module.exports = router;
