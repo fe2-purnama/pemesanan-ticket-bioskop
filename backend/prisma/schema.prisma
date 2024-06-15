@@ -23,7 +23,6 @@ model Users {
   Tickets    Tickets[]
 }
 
-
 model Cinemas {
   cinema_id Int     @id @default(autoincrement())
   name      String
@@ -42,6 +41,7 @@ model Movies {
   duration    Int
   rating      String
   description String?
+  status      MovieStatus @default(NOW_SHOWING)
   Shows       Shows[]
 }
 
@@ -74,4 +74,9 @@ model Payments {
   payment_time  DateTime
   payment_method String
   Ticket        Tickets  @relation(fields: [ticket_id], references: [ticket_id])
+}
+
+enum MovieStatus {
+  NOW_SHOWING
+  COMING_SOON
 }

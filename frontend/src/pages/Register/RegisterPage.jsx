@@ -59,7 +59,7 @@ const RegisterPage = () => {
         <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
           <img
             alt=""
-            src="https://images.unsplash.com/photo-1617195737496-bc30194e3a19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+            src="https://img.freepik.com/free-photo/assortment-cinema-elements-red-background-with-copy-space_23-2148457848.jpg?t=st=1718322236~exp=1718325836~hmac=32011e02c83ee914045836b151e37694fc899549e1cbf08cf99599b55189cce9&w=1380"
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
 
@@ -229,13 +229,13 @@ const RegisterPage = () => {
               <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                 <button
                   type="submit"
-                  className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
+                  className="inline-block shrink-0 rounded-md border border-red-600 bg-[#a92f31] px-12 py-3 text-sm font-medium text-white transition hover:bg-red-200 hover:text-red-600 focus:outline-none focus:ring active:text-red-500"
                 >
                   Create an account
                 </button>
                 <p className="mt-4 text-sm text-gray-500 sm:mt-0">
                   Already have an account?{" "}
-                  <a href="#" className="text-gray-700 underline">
+                  <a href="/login" className="text-gray-700 underline">
                     Log in
                   </a>
                   .
