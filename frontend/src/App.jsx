@@ -15,6 +15,8 @@ import AdminCinema from "./pages/Admin/AdminCinema/AdminCinema";
 import AdminShow from "./pages/Admin/AdminShow/AdminShow";
 import QueryClientProvider from "./QueryClientProvider";
 import { AuthProvider } from "./contexts/AuthContext";
+import DetailFilm from "./pages/DetailFilm/DetailFilm";
+import OrderPage from "./pages/Order/OrderPage";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
               <Route index element={<HomePage />} />
               <Route path="film" element={<FilmPage />} />
               <Route path="ticket" element={<TicketPage />} />
+              <Route path="film/detail" element={<DetailFilm />} />
+              <Route path="film/detail/order" element={<OrderPage />} />
               <Route path="*" element={<NoPage />} />
             </Route>
             <Route path="login" element={<LoginPage />} />
