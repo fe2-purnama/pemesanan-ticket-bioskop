@@ -28,6 +28,22 @@ const DetailFilm = () => {
               </span>
             </div>
             <div className="mb-2 text-gray-500 dark:text-gray-400">
+              <p>
+                <b>Genre:</b> Action, Comedy
+              </p>
+              <p>
+                <b>Durasi:</b> 1 jam 38 menit
+              </p>
+              <p>
+                <b>Sutradara:</b> Jame Kamerun
+              </p>
+              <p>
+                <b>Rating Usia:</b> 18+
+              </p>
+              <p>
+                <b>Genre:</b> Action, Comedy
+              </p>
+              <b>Sinopsis</b>
               <p className="mb-2">
                 Track work across the enterprise through an open, collaborative
                 platform. Link issues across Jira and ingest data from other
@@ -35,7 +51,6 @@ const DetailFilm = () => {
                 teams have richer contextual information to rapidly respond to
                 requests, incidents, and changes.
               </p>
-              <p>1h 30m</p>
             </div>
             <div class="flex items-center">
               <svg
