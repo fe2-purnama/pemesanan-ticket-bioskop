@@ -23,6 +23,7 @@ app.use(fileUpload());
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
+    debugger;
     res.send("Hello World dulu gasih? engga ya");
 });
 app.use('/admin', verifyToken, ensureAdmin, (req, res) => {

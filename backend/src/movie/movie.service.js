@@ -1,29 +1,32 @@
 const prisma = require("../db");
 const path = require('path');
 const fs = require("fs/promises");
-const { findMovies, findMovieById, insertMovie, deleteMovie, editMovie } = require("./movie.repository");
+const { findMovies, findMovieById, findMovieBySlug, insertMovie, deleteMovie, editMovie } = require("./movie.repository");
 
 const getAllMovies = async () => {
     const movies = await findMovies();
-
     return movies;
 };
 
 const getMovieById = async (id) => {
     const movie = await findMovieById(id);
-
     if (!movie) {
-        throw Error("movie Not found");
+        throw Error("Movie not found");
     }
+    return movie;
+};
 
+const getMovieBySlug = async (slug) => {
+    const movie = await findMovieBySlug(slug);
+    if (!movie) {
+        throw Error("Movie not found");
+    }
     return movie;
 };
 
 const createMovie = async (newMovieData, file, req) => {
-    const { title, genre, duration, rating, description } = newMovieData;
-
+    const { title, genre, duration, rating, description, slug } = newMovieData;
     const durationInt = parseInt(duration, 10);
-
     const ext = path.extname(file.name);
     const fileName = file.md5 + ext;
     const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
@@ -42,17 +45,16 @@ const createMovie = async (newMovieData, file, req) => {
         genre,
         duration: durationInt,
         rating,
-        description
+        description,
+        slug,
     };
 
     const movie = await insertMovie(movieData);
-
     return movie;
 };
 
 const deleteMovieById = async (id) => {
     await getMovieById(id);
-    
     await deleteMovie(id);
 };
 
@@ -61,7 +63,7 @@ const editMovieById = async (id, movieData, file, req) => {
 
     let updateData = {
         ...movieData,
-        duration: parseInt(movieData.duration, 10)
+        duration: parseInt(movieData.duration, 10),
     };
 
     if (file) {
@@ -85,7 +87,7 @@ const editMovieById = async (id, movieData, file, req) => {
         updateData = {
             ...updateData,
             image: fileName,
-            url
+            url,
         };
     }
 
@@ -96,8 +98,8 @@ const editMovieById = async (id, movieData, file, req) => {
 module.exports = {
     getAllMovies,
     getMovieById,
+    getMovieBySlug,
     createMovie,
     deleteMovieById,
     editMovieById,
-
-}
+};

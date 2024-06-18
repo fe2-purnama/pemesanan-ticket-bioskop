@@ -1,17 +1,23 @@
-// berkomunikasi dengan database
-
 const prisma = require("../db");
 
 const findMovies = async () => {
     const movies = await prisma.movies.findMany();
-
     return movies;
 }
 
 const findMovieById = async (movie_id) => {
     const movie = await prisma.movies.findUnique({
-        where:{
+        where: {
             movie_id,
+        },
+    });
+    return movie;
+};
+
+const findMovieBySlug = async (slug) => {
+    const movie = await prisma.movies.findUnique({
+        where: {
+            slug,
         },
     });
     return movie;
@@ -44,7 +50,8 @@ const editMovie = async (id, movieData) => {
             rating: movieData.rating,
             description: movieData.description,
             image: movieData.image,
-            url: movieData.url
+            url: movieData.url,
+            slug: movieData.slug,
         },
     });
     return movie;
@@ -53,7 +60,8 @@ const editMovie = async (id, movieData) => {
 module.exports = {
     findMovies,
     findMovieById,
+    findMovieBySlug,
     insertMovie,
     deleteMovie,
-    editMovie
+    editMovie,
 };

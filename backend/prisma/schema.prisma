@@ -37,13 +37,16 @@ model Movies {
   title       String
   image       String
   url         String
+  director    String
   genre       String
   duration    Int
   rating      String
   description String?
   status      MovieStatus @default(NOW_SHOWING)
   Shows       Shows[]
+  slug        String @unique
 }
+
 
 model Shows {
   show_id         Int      @id @default(autoincrement())

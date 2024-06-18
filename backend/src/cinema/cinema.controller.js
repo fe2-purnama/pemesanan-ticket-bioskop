@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const assert = require('assert');
 const { fetchAllCinemas, fetchCinemaById, addCinema, editCinema, removeCinema } = require('./cinema.service');
 
 router.get('/', async (req, res) => {
@@ -12,13 +13,19 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
+  try {
     const id = parseInt(req.params.id);
-    try {
-        const cinema = await fetchCinemaById(id);
-        res.json(cinema);
-    } catch (error) {
-        res.status(404).json({ message: error.message });
+    assert(Number.isInteger(id), 'ID harus berupa angka.');
+    const cinema = await fetchCinemaById(id);
+    assert(cinema, `Cinema dengan id' ${id} 'tidak ditemukan.`);
+    res.json(cinema);
+  } catch (error) {
+    if (error.name === 'AssertionError') {
+      res.status(404).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: error.message });
     }
+  }
 });
 
 router.post('/', async (req, res) => {
@@ -37,16 +44,24 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     const { name, address, city, state } = req.body;
+    if (!Number.isInteger(id)) {
+        return res.status(400).json({ errorCode: 'INVALID_ID', message: "ID harus berupa angka." });
+    }
     try {
         const updatedCinema = await editCinema(id, { name, address, city, state });
+        if (!updatedCinema) {
+            return res.status(404).json({ errorCode: 'CINEMA_NOT_FOUND', message: "Cinema tidak ditemukan." });
+        }
         res.status(201).send({
             data: updatedCinema,
-            message: "edit cinema success"
+            message: "Edit cinema berhasil."
         });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ errorCode: 'SERVER_ERROR', message: error.message });
     }
 });
+
+
 
 router.patch('/:id', async (req, res) => {
     const id = parseInt(req.params.id);
@@ -63,7 +78,7 @@ router.delete('/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
         await removeCinema(id);
-        res.status(204).send({ message: "berhasil menghapus cinema"});
+        res.status(204).send({ message: "berhasil menghapus cinema" });
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
