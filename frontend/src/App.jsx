@@ -28,8 +28,8 @@ function App() {
               <Route index element={<HomePage />} />
               <Route path="film" element={<FilmPage />} />
               <Route path="ticket" element={<TicketPage />} />
-              <Route path="film/detail" element={<DetailFilm />} />
-              <Route path="film/detail/order" element={<OrderPage />} />
+              <Route path="film/:slug" element={<DetailFilm />} />
+              <Route path="film/:slug/order" element={<OrderPage />} />
               <Route path="*" element={<NoPage />} />
             </Route>
             <Route path="login" element={<LoginPage />} />

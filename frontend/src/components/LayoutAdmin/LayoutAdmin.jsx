@@ -65,7 +65,7 @@ const LayoutAdmin = () => {
               >
                 <span className="sr-only">Open sidebar</span>
               </button>
-              <a href="/" className="flex ms-2 md:me-24">
+              <a href="/admin" className="flex ms-2 md:me-24">
                 <img
                   src="https://flowbite.com/docs/images/logo.svg"
                   className="h-8 me-3"
@@ -78,7 +78,7 @@ const LayoutAdmin = () => {
             </div>
             <div className="flex items-center">
               <div className="flex items-center ms-3">
-                <span className="text-white me-3">{user.name}</span>
+                <span className="text-black me-3">{user.name}</span>
                 <button
                   type="button"
                   onClick={logout}
@@ -116,9 +116,6 @@ const LayoutAdmin = () => {
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <span className="flex-1 ms-3 whitespace-nowrap">Movies</span>
-                <span className="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                  Pro
-                </span>
               </Link>
             </li>
             <li>

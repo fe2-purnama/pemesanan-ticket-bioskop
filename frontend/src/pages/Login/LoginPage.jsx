@@ -14,7 +14,6 @@ const LoginPage = () => {
 
     try {
       await login(email, password);
-      // Login sukses, navigasi akan ditangani oleh AuthProvider
     } catch (error) {
       setError("Email atau password salah");
       console.error("Login error:", error);
