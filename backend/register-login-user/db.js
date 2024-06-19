@@ -2,11 +2,10 @@
 const mysql = require('mysql2');
 
 const db = mysql.createConnection({
-    host: 'educalab.id',
-    user: 'Z4iC4YbFydrLLuhf',
-    password: 'Yiralt1gifhO4DsI',
-    database: 'dDtlDrYwcMJcymx9',
-    port : 3307
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'user'
 });
 
 db.connect((err) => {
