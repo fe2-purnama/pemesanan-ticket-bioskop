@@ -1,6 +1,23 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const AdminMovie = () => {
+  const [movies, setMovies] = useState([]);
+
+  const getMovie = async () => {
+    try {
+      const response = await axios.get("http://localhost:2000/movies");
+      console.log(response.data);
+      setMovies(response.data);
+    } catch (error) {
+      console.error("error fetching data: ", error);
+    }
+  };
+
+  useEffect(() => {
+    getMovie();
+  }, []);
+
   return (
     <div className="p-4 sm:ml-64">
       <div className="p-4 mt-14">
@@ -46,16 +63,19 @@ const AdminMovie = () => {
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" class="px-6 py-3">
-                  Product name
+                  Id
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  Color
+                  Title
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  Category
+                  Image
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  Price
+                  Genre
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Rating
                 </th>
                 <th scope="col" class="px-6 py-3">
                   Action
@@ -63,126 +83,35 @@ const AdminMovie = () => {
               </tr>
             </thead>
             <tbody>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Apple MacBook Pro 17"
-                </th>
-                <td class="px-6 py-4">Silver</td>
-                <td class="px-6 py-4">Laptop</td>
-                <td class="px-6 py-4">$2999</td>
-                <td class="px-6 py-4">
-                  <a
-                    href="#"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              {movies.map((movie) => (
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th
+                    scope="row"
+                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    key={movie.movie_id}
                   >
-                    Edit
-                  </a>
-                  <a
-                    href="#"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
-              </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Microsoft Surface Pro
-                </th>
-                <td class="px-6 py-4">White</td>
-                <td class="px-6 py-4">Laptop PC</td>
-                <td class="px-6 py-4">$1999</td>
-                <td class="px-6 py-4">
-                  <a
-                    href="#"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
-              </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Magic Mouse 2
-                </th>
-                <td class="px-6 py-4">Black</td>
-                <td class="px-6 py-4">Accessories</td>
-                <td class="px-6 py-4">$99</td>
-                <td class="px-6 py-4">
-                  <a
-                    href="#"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
-              </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Apple Watch
-                </th>
-                <td class="px-6 py-4">Silver</td>
-                <td class="px-6 py-4">Accessories</td>
-                <td class="px-6 py-4">$179</td>
-                <td class="px-6 py-4">
-                  <a
-                    href="#"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
-              </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  iPad
-                </th>
-                <td class="px-6 py-4">Gold</td>
-                <td class="px-6 py-4">Tablet</td>
-                <td class="px-6 py-4">$699</td>
-                <td class="px-6 py-4">
-                  <a
-                    href="#"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
-              </tr>
-              <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Apple iMac 27"
-                </th>
-                <td class="px-6 py-4">Silver</td>
-                <td class="px-6 py-4">PC Desktop</td>
-                <td class="px-6 py-4">$3999</td>
-                <td class="px-6 py-4">
-                  <a
-                    href="#"
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
-              </tr>
+                    {movie.movie_id}
+                  </th>
+                  <td class="px-6 py-4">{movie.title}</td>
+                  <td class="px-6 py-4">{movie.image}</td>
+                  <td class="px-6 py-4">{movie.genre}</td>
+                  <td class="px-6 py-4">{movie.rating}</td>
+                  <td class="px-6 py-4">
+                    <a
+                      href="#"
+                      class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    >
+                      Edit
+                    </a>
+                    <a
+                      href="#"
+                      class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    >
+                      Delete
+                    </a>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

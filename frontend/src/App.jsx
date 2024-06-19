@@ -17,6 +17,7 @@ import QueryClientProvider from "./QueryClientProvider";
 import { AuthProvider } from "./contexts/AuthContext";
 import DetailFilm from "./pages/DetailFilm/DetailFilm";
 import OrderPage from "./pages/Order/OrderPage";
+import PaymentPage from "./pages/Payment/PaymentPage";
 
 function App() {
   return (
@@ -30,6 +31,10 @@ function App() {
               <Route path="ticket" element={<TicketPage />} />
               <Route path="film/:slug" element={<DetailFilm />} />
               <Route path="film/:slug/order" element={<OrderPage />} />
+              <Route
+                path="film/:slug/order/payment"
+                element={<PaymentPage />}
+              />
               <Route path="*" element={<NoPage />} />
             </Route>
             <Route path="login" element={<LoginPage />} />

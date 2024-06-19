@@ -1,32 +1,85 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
 import "./Seat.css";
 
-const Seat = () => {
-  const [tickets, setTickets] = useState(Array(60).fill(false));
-  const [count, setCount] = useState(0);
-  const [amount, setAmount] = useState(0);
-  const [selectedSeats, setSelectedSeats] = useState([]);
+const Seat = ({ showId, movieId }) => {
+  const [movieTitle, setMovieTitle] = useState("");
+  const [tickets, setTickets] = useState(
+    Array.from({ length: 60 }, (_, index) => ({
+      seatNumber: generateSeatCode(index),
+      booked: false,
+    })).reduce((acc, seat) => {
+      acc[seat.seatNumber] = seat;
+      return acc;
+    }, {})
+  );
 
-  const handleSeatChange = (index) => {
-    const updatedTickets = [...tickets];
-    const seatCode = generateSeatCode(index);
-    if (!updatedTickets[index]) {
-      setCount(count + 1);
-      setAmount(amount + 30000);
-      setSelectedSeats([...selectedSeats, seatCode]);
-    } else {
-      setCount(count - 1);
-      setAmount(amount - 30000);
-      setSelectedSeats(selectedSeats.filter((seat) => seat !== seatCode));
+  const fetchMovieData = async () => {
+    try {
+      const response = await api.get(`/movies/${movieId}`);
+      setMovieTitle(response.data.title);
+    } catch (error) {
+      console.error("Error fetching movie data:", error);
     }
-    updatedTickets[index] = !updatedTickets[index];
-    setTickets(updatedTickets);
   };
 
-  const generateSeatCode = (index) => {
-    const row = String.fromCharCode(65 + Math.floor(index / 10)); // Convert to A, B, C, etc.
-    const col = (index % 10) + 1; // Convert to 1, 2, 3, etc.
+  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [amount, setAmount] = useState(0);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchMovieData();
+    const fetchSeatAvailability = async () => {
+      try {
+        const response = await api.get(`/ticket/availability/${showId}`);
+        const updatedTickets = { ...tickets };
+        Object.keys(response.data.seatAvailability).forEach((seatNumber) => {
+          if (updatedTickets[seatNumber]) {
+            updatedTickets[seatNumber].booked =
+              response.data.seatAvailability[seatNumber].booked;
+          }
+        });
+        setTickets(updatedTickets);
+      } catch (error) {
+        console.error("Error fetching seat availability:", error);
+      }
+    };
+
+    fetchSeatAvailability();
+  }, [showId, tickets]);
+
+  function generateSeatCode(index) {
+    const row = String.fromCharCode(65 + Math.floor(index / 10));
+    const col = (index % 10) + 1;
     return `${row}${col}`;
+  }
+
+  const handleSeatChange = (seatNumber) => {
+    if (!tickets[seatNumber].booked) {
+      const updatedSelectedSeats = [...selectedSeats];
+      const index = updatedSelectedSeats.indexOf(seatNumber);
+
+      if (index !== -1) {
+        updatedSelectedSeats.splice(index, 1);
+        setAmount(amount - 30000);
+      } else {
+        updatedSelectedSeats.push(seatNumber);
+        setAmount(amount + 30000);
+      }
+
+      setSelectedSeats(updatedSelectedSeats);
+    }
+  };
+
+  const handleBooking = () => {
+    navigate("payment", {
+      state: {
+        selectedSeats: selectedSeats,
+        showId: showId,
+        movieId: movieId,
+      },
+    });
   };
 
   return (
@@ -34,7 +87,7 @@ const Seat = () => {
       <div className="tickets">
         <div className="ticket-selector">
           <div className="head">
-            <h1 className="text-3xl font-bold">Movie Name</h1>
+            <h1 className="text-3xl font-bold">{movieTitle}</h1>
           </div>
           <div className="seats">
             <div className="status">
@@ -43,19 +96,26 @@ const Seat = () => {
               <div className="item">Kursi Kamu</div>
             </div>
             <div className="all-seats">
-              {tickets.map((booked, index) => (
-                <React.Fragment key={index}>
+              {Object.keys(tickets).map((seatNumber) => (
+                <React.Fragment key={seatNumber}>
                   <input
                     type="checkbox"
                     name="tickets"
-                    id={`s${index}`}
-                    checked={booked}
-                    onChange={() => handleSeatChange(index)}
+                    id={`seat-${seatNumber}`}
+                    checked={selectedSeats.includes(seatNumber)}
+                    onChange={() => handleSeatChange(seatNumber)}
+                    disabled={tickets[seatNumber].booked}
                   />
                   <label
-                    htmlFor={`s${index}`}
-                    className={`seat ${booked ? "booked" : ""}`}
-                    title={generateSeatCode(index)}
+                    htmlFor={`seat-${seatNumber}`}
+                    className={`seat ${
+                      tickets[seatNumber].booked
+                        ? "booked"
+                        : selectedSeats.includes(seatNumber)
+                        ? "selected"
+                        : ""
+                    }`}
+                    title={seatNumber}
                   />
                 </React.Fragment>
               ))}
@@ -65,14 +125,16 @@ const Seat = () => {
         <div className="price">
           <div className="total">
             <span>
-              <span className="count">{count}</span> Tickets
+              Total: <span className="count">{selectedSeats.length}</span> Kursi
             </span>
             <div className="amount">
-              {amount}{" "}
-              {selectedSeats.length > 0 && `(${selectedSeats.join(",")})`}
+              Rp{amount.toLocaleString()}{" "}
+              {selectedSeats.length > 0 && `(${selectedSeats.join(", ")})`}
             </div>
           </div>
-          <button type="button">Book</button>
+          <button type="button" onClick={handleBooking}>
+            Payment
+          </button>
         </div>
       </div>
     </div>

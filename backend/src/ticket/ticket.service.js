@@ -1,4 +1,4 @@
-const { findShowById, findUserById, createTicket, updateAvailableSeats, findTicketById, updateTicket } = require('./ticket.repository');
+const { findShowById, findUserById, createTicket, updateAvailableSeats, findTicketById, updateTicket, deleteTicket, findTicketsByUserId, findSeatsByShowId, findShow } = require('./ticket.repository');
 
 const bookTicket = async (userId, showId, seatNumber) => {
     const show = await findShowById(showId);
@@ -56,14 +56,53 @@ const editTicket = async (ticketId, userId, newShowId, newSeatNumber) => {
 
     const updatedTicket = await updateTicket(ticketId, updatedTicketData);
 
-    
     await updateAvailableSeats(oldShow.show_id, oldShow.available_seats + 1);
     await updateAvailableSeats(newShowId, newShow.available_seats - 1);
 
     return updatedTicket;
 };
 
+const cancelTicket = async (ticketId) => {
+    const ticket = await findTicketById(ticketId);
+    if (!ticket) {
+        throw new Error('Ticket tidak ditemukan');
+    }
+
+    const show = await findShowById(ticket.show_id);
+    if (!show) {
+        throw new Error('Show tidak ditemukan');
+    }
+
+    await deleteTicket(ticketId);
+    await updateAvailableSeats(show.show_id, show.available_seats + 1);
+
+    return ticket;
+};
+
+const getUserTickets = async (userId) => {
+    const tickets = await findTicketsByUserId(userId);
+    return tickets;
+};
+
+const getSeatAvailability = async (showId) => {
+    const seats = await findSeatsByShowId(showId);
+    const seatAvailability = Array(80).fill(false);
+    seats.forEach(seat => {
+        seatAvailability[seat.seat_number - 1] = true;
+    });
+    return seatAvailability;
+};
+
+const findShows = async (filmTitle, showTime, cinemaDetails) => {
+    return await findShow(filmTitle, showTime, cinemaDetails);
+};
+
+
 module.exports = {
     bookTicket,
-    editTicket
+    editTicket,
+    cancelTicket,
+    getUserTickets,
+    getSeatAvailability,
+    findShows
 };

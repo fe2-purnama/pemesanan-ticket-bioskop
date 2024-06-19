@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { fetchAllShows, fetchShowById, addShow, editShow, removeShow } = require('./show.service');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 // Get all shows
 router.get('/', async (req, res) => {
@@ -21,6 +23,19 @@ router.get('/:id', async (req, res) => {
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
+});
+
+router.get('/movie/:movieId', async (req, res) => {
+  const { movieId } = req.params;
+  try {
+    const shows = await prisma.shows.findMany({
+      where: { movie_id: parseInt(movieId) },
+      include: { Cinema: true }
+    });
+    res.json(shows);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching shows' });
+  }
 });
 
 // Create new show
